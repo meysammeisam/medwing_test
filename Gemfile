@@ -3,13 +3,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.4.0'
 
+gem 'bootsnap', '>= 1.1.0', require: false
 gem 'pg', '~> 1.1.4'
 gem 'puma', '~> 3.11'
 gem 'rails', '~> 5.1.4'
 gem 'redis', '~> 4.0'
-
-# Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
+gem 'sidekiq', '~> 5.2.5'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

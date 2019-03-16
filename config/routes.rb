@@ -1,4 +1,12 @@
+# frozen_string_literal: true
+
+require 'sidekiq/web'
+
+Sidekiq::Web.set :session_secret, Rails.application.secrets[:secret_key_base]
+
 Rails.application.routes.draw do
+  mount Sidekiq::Web => '/sidekiq'
+
   namespace :api do
     namespace :v1 do
       resources :thermostats, defaults: { format: 'json' }, only: [] do

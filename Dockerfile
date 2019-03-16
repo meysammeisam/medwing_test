@@ -17,10 +17,5 @@ COPY . .
 
 EXPOSE 3000
 
-# ENTRYPOINT ["bundle", "exec"]
-# CMD ["rails s -p 3000"]
-# Start the main process.
-RUN bundle env
-RUN bundle -v
-RUN bundler -v
+ENTRYPOINT ["bundle", "exec"]
 CMD ["rails", "server", "-b", "0.0.0.0"]
