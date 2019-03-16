@@ -47,7 +47,7 @@ services:
     networks:
       - medwing_test
     ports:
-      - "6379"
+      - "6379:6379"
 volumes:
   medwing_vol:
 networks:
