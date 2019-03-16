@@ -24,7 +24,7 @@ services:
     networks:
       - medwing_test
     ports:
-      - "5432"
+      - "5432:5432"
   redis:
     image: redis
     container_name: "medwing_test_redis_1"
