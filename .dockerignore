@@ -1,0 +1,29 @@
+.git*
+log/*
+tmp/*
+coverage/*
+!tmp/cache/assets
+!tmp/cache/assets/*
+db/archived_migrations/*
+Dockerfile
+Jenkinsfile
+README.md
+devops-work/*
+!devops-work/jenkins-ci
+!devops-work/jenkins-ci/*
+presence/*
+*.orig
+# Ignore all ~ files
+*~
+# Ignore Rubymine config
+.idea/
+
+# Ignore configuration files of codeclimate
+.csslintrc
+.eslintignore
+.eslintrc
+.rubocop.yml
+coffeelint.json
+.codeclimate.yml
+.eslintrc.yml
+.byebug_history
