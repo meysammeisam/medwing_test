@@ -32,8 +32,6 @@ services:
     links:
       - postgres
       - redis
-    environment:
-      - RAILS_ENV=development
   postgres:
     image: camptocamp/postgres:9.6
     container_name: "medwing_test_postgres_1"

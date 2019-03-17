@@ -1,9 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  household_token: MyText
-  location: MyText
+  id: 100
+  household_token: thermostat1
+  location: apartment1
 
 two:
-  household_token: MyText
-  location: MyText
+  id: 101
+  household_token: thermostat2
+  location: apartment2

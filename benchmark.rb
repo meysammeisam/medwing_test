@@ -3,7 +3,7 @@
 require 'uri'
 require 'net/http'
 
-url = URI('http://127.0.0.1:3000/api/v1/readings/')
+url = URI('http://app:3000/api/v1/readings/')
 
 http = Net::HTTP.new(url.host, url.port)
 
