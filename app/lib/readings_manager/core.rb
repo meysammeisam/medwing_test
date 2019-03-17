@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 module ReadingsManager
-  # ReadingsManager::OnAirBuilder
-  class OnAirBuilder
-    include Helpers::RedisHelper
-
+  # ReadingsManager::Core
+  class Core
     attr_reader :reading_orm
 
     def initialize(thermostat_id: nil, humidity: nil, temperature: nil, battery_charge: nil)
       @thermostat_id = thermostat_id
+
+      # Get OnAir ID, Seq_number and Thermostat
       @id, seq_number, @thermostat = ReadingsManager::ORMManager.new(thermostat_id: thermostat_id).fetch
 
-      @reading_orm = ReadingsManager::ReadingORM.new(
+      @reading_orm = ReadingsManager::Orms::ReadingORM.new(
         id: @id,
         seq_number: seq_number,
         thermostat_id: thermostat_id,
@@ -31,7 +31,7 @@ module ReadingsManager
     private
 
     def after_save_tasks
-      key = reading_redis_key(@id)
+      key = @reading_orm.redis_key
 
       after_save_update_average_values
       ReadingsManager::Workers::SaveReadingWorker.perform_async(key)
@@ -39,7 +39,7 @@ module ReadingsManager
 
     def after_save_update_average_values
       reading = reading_orm.reading
-      ReadingsManager::ThermostatBuilder.new(thermostat_id: @thermostat_id).
+      ReadingsManager::Orms::ThermostatORM.new(thermostat_id: @thermostat_id).
         update(
           thermostat: @thermostat,
           battery_charge: reading.battery_charge,

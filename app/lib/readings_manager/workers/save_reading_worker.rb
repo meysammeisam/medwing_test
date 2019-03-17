@@ -7,8 +7,8 @@ module ReadingsManager
       include Sidekiq::Worker
 
       def perform(reading_redis_key)
-        attrs = ReadingsManager::ReadingORM.new.fetch(reading_redis_key).symbolize_keys
-        reading_orm = ReadingsManager::ReadingORM.new(safe_attributes(attrs))
+        attrs = ReadingsManager::Orms::ReadingORM.new.fetch(reading_redis_key).symbolize_keys
+        reading_orm = ReadingsManager::Orms::ReadingORM.new(safe_attributes(attrs))
         reading_orm.reading.save!
         reading_orm.clean(reading_redis_key)
       end

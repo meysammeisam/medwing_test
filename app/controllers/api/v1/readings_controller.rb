@@ -11,7 +11,7 @@ module Api
       end
 
       def show
-        res = ReadingsManager::ReadingORM.find(params[:id])
+        res = ReadingsManager::Orms::ReadingORM.find(params[:id])
         return head :forbidden if res.blank? || res['thermostat_id'] != @current_thermostat.id
 
         render json: res
@@ -24,7 +24,7 @@ module Api
       end
 
       def build_handler
-        @reading_handler = ReadingsManager::OnAirBuilder.new(
+        @reading_handler = ReadingsManager::Core.new(
           thermostat_id: @current_thermostat.id,
           temperature: params[:temperature],
           humidity: params[:humidity],

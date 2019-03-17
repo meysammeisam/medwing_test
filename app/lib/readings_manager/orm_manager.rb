@@ -16,7 +16,7 @@ module ReadingsManager
     end
 
     def fetch
-      @thermostat ||= ReadingsManager::ThermostatBuilder.new(thermostat_id: @thermostat_id).save
+      @thermostat ||= ReadingsManager::Orms::ThermostatORM.new(thermostat_id: @thermostat_id).save
 
       @thermostat = JSON.parse(@thermostat) unless @thermostat.is_a?(Hash)
       [@id, @seq_number, @thermostat]
@@ -45,12 +45,12 @@ module ReadingsManager
 
     def set_seq_number
       key = thermostat_seq_number_redis_key(@thermostat_id)
-      value = Reading.where(thermostat_id: @thermostat_id).maximum(:seq_number).to_i
+      value = ::Reading.where(thermostat_id: @thermostat_id).maximum(:seq_number).to_i
       set(key, value)
     end
 
     def set_id
-      set(global_reading_id_redis_key, Reading.maximum(:id).to_i)
+      set(global_reading_id_redis_key, ::Reading.maximum(:id).to_i)
     end
   end
 end
