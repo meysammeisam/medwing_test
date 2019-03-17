@@ -12,6 +12,7 @@ module Api
 
       def show
         res = ReadingsManager::ReadingORM.find(params[:id])
+        return head :forbidden if res.blank? || res['thermostat_id'] != @current_thermostat.id
 
         render json: res
       end

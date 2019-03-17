@@ -2,7 +2,9 @@ module Api
   module V1
     class ThermostatsController < ApplicationController
       def stats
-        render json: { message: "Thermostats Stats #{params[:id]}" }
+        avg_values = ReadingsManager::ThermostatBuilder.new(thermostat_id: @current_thermostat.id).fetch
+
+        render json: avg_values
       end
     end
   end

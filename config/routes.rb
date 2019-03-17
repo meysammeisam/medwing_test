@@ -9,12 +9,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :thermostats, defaults: { format: 'json' }, only: [] do
-        member do
-          get :stats
-        end
-      end
-
+      get get 'thermostat/stats' => 'thermostats#stats', defaults: { format: :json }
       resources :readings, defaults: { format: 'json' }, only: %i[show create]
     end
   end

@@ -8,6 +8,7 @@ module ReadingsManager
     attr_reader :reading_orm
 
     def initialize(thermostat_id: nil, humidity: nil, temperature: nil, battery_charge: nil)
+      @thermostat_id = thermostat_id
       @id, seq_number, @thermostat = ReadingsManager::ORMManager.new(thermostat_id: thermostat_id).fetch
 
       @reading_orm = ReadingsManager::ReadingORM.new(
@@ -31,9 +32,21 @@ module ReadingsManager
 
     def after_save_tasks
       key = reading_redis_key(@id)
-      # TODO: update avg values
 
+      after_save_update_average_values
       ReadingsManager::Workers::SaveReadingWorker.perform_async(key)
+    end
+
+    def after_save_update_average_values
+      reading = reading_orm.reading
+      ReadingsManager::ThermostatBuilder.new(thermostat_id: @thermostat_id).
+        update(
+          thermostat: @thermostat,
+          battery_charge: reading.battery_charge,
+          humidity: reading.humidity,
+          temperature: reading.temperature,
+          seq_number: reading.seq_number
+        )
     end
   end
 end

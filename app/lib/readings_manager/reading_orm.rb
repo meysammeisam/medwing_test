@@ -45,9 +45,7 @@ module ReadingsManager
       orm = new
 
       obj = orm.fetch orm.reading_redis_key(id)
-      obj ||= Reading.find(id)
-
-      obj
+      obj || ::Reading.find(id)
     end
   end
 end
