@@ -1,13 +1,20 @@
+# frozen_string_literal: true
+
 module Api
   module V1
+    # Api::V2::ReadingsController
     class ReadingsController < ApplicationController
       before_action :build_handler, only: :create
 
       def create
-        # TODO: add lock
-        return render json: @reading_handler.reading_orm.reading.to_json if @reading_handler.save
+        try = 1
+        RedisDLM::DLM.with_lock!(obj: @current_thermostat, ttl: 1.second, lock_for: 'pushing_reading') do
+          return render json: @reading_handler.reading_orm.reading if @reading_handler.save
+        end
 
         render json: { errors: @reading_handler.reading_orm.errors }, status: :unprocessable_entity
+      rescue RedisDLM::Error
+        retry if (try += 1) <= 3
       end
 
       def show

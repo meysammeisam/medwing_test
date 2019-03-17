@@ -8,11 +8,15 @@ module ReadingsManager
     def initialize(thermostat_id: nil)
       @thermostat_id = thermostat_id
 
-      # TODO: Use lock on ID to prevent duplication
-      @id, @seq_number, @thermostat = initiate_data
-      set_id if @id.blank?
-      set_seq_number if @seq_number.blank?
-      @id, @seq_number = increment_id_and_seq
+      try = 1
+      RedisDLM::DLM.with_lock!(obj: @current_thermostat, ttl: 1.second, lock_for: 'pushing_reading') do
+        @id, @seq_number, @thermostat = initiate_data
+        set_id if @id.blank?
+        set_seq_number if @seq_number.blank?
+        @id, @seq_number = increment_id_and_seq
+      end
+    rescue RedisDLM::Error
+      retry if (try += 1) <= 5
     end
 
     def fetch
